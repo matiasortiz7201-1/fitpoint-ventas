@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitPoint — Dashboard de Ventas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1520;
+    --surface2: #111d2e;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00e5a0;
+    --accent2: #ffc233;
+    --accent3: #4d9fff;
+    --red: #ff4d6d;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* Header */
+  header {
+    padding: 2rem 3rem 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: #000;
+    letter-spacing: 0;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .header-meta {
+    text-align: right;
+  }
+
+  .date-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(0,229,160,0.08);
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0,229,160,0.2);
+    letter-spacing: 1px;
+  }
+
+  .period-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Main wrapper */
+  main {
+    padding: 2rem 3rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* KPI Strip */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .kpi-card.ventas::before { background: var(--accent3); }
+  .kpi-card.unid::before { background: var(--accent); }
+  .kpi-card.contri::before { background: var(--accent2); }
+  .kpi-card.mg::before { background: var(--red); }
+
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .kpi-card.ventas .kpi-value { color: var(--accent3); }
+  .kpi-card.unid .kpi-value { color: var(--accent); }
+  .kpi-card.contri .kpi-value { color: var(--accent2); }
+  .kpi-card.mg .kpi-value { color: var(--red); }
+
+  .kpi-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .kpi-ly {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .kpi-var {
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  .kpi-var.pos { color: var(--accent); }
+  .kpi-var.neg { color: var(--red); }
+
+  /* Section title */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Tiendas grid */
+  .tiendas-section { margin-bottom: 2.5rem; animation: fadeUp 0.6s 0.1s ease both; }
+
+  .tiendas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .tienda-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .tienda-card:hover {
+    border-color: rgba(77,159,255,0.3);
+    box-shadow: 0 4px 24px rgba(77,159,255,0.08);
+    transform: translateY(-2px);
+  }
+
+  .tienda-card.web-card {
+    border-color: rgba(0,229,160,0.2);
+    background: linear-gradient(135deg, #0d1520 0%, #0a1e18 100%);
+  }
+
+  .tienda-card.web-card:hover {
+    border-color: rgba(0,229,160,0.4);
+    box-shadow: 0 4px 24px rgba(0,229,160,0.1);
+  }
+
+  .tienda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .tienda-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  .tienda-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .tienda-tag.store { background: rgba(77,159,255,0.12); color: var(--accent3); border: 1px solid rgba(77,159,255,0.2); }
+  .tienda-tag.web { background: rgba(0,229,160,0.12); color: var(--accent); border: 1px solid rgba(0,229,160,0.2); }
+
+  .tienda-ventas {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .tienda-ly {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    margin-bottom: 0.75rem;
+  }
+
+  .tienda-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .metric-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .metric-label {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    margin-bottom: 0.2rem;
+  }
+
+  .metric-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  .metric-value.pos { color: var(--accent); }
+  .metric-value.neg { color: var(--red); }
+  .metric-value.neutral { color: var(--text); }
+  .metric-value.yellow { color: var(--accent2); }
+
+  /* Progress bar */
+  .tienda-bar-wrapper {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tienda-bar-bg {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .tienda-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent3);
+    transition: width 1s ease;
+  }
+
+  .tienda-card.web-card .tienda-bar-fill { background: var(--accent); }
+
+  .tienda-pct {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+
+  /* Bottom row */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Bar chart rows */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .bar-label {
+    font-size: 0.75rem;
+    color: var(--text);
+    width: 110px;
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-weight: 500;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: rgba(0,0,0,0.8);
+    transition: width 1.2s ease;
+    white-space: nowrap;
+  }
+
+  .bar-amount {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    width: 70px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Color palette for bars */
+  .c1 { background: linear-gradient(90deg, #4d9fff, #7bbdff); }
+  .c2 { background: linear-gradient(90deg, #00e5a0, #40ffbe); }
+  .c3 { background: linear-gradient(90deg, #ffc233, #ffd97a); }
+  .c4 { background: linear-gradient(90deg, #ff6b8a, #ff9eb1); }
+  .c5 { background: linear-gradient(90deg, #a78bfa, #c4b5fd); }
+  .c6 { background: linear-gradient(90deg, #34d399, #6ee7b7); }
+  .c7 { background: linear-gradient(90deg, #fb923c, #fdba74); }
+  .c8 { background: linear-gradient(90deg, #e879f9, #f0abfc); }
+  .c9 { background: linear-gradient(90deg, #60a5fa, #93c5fd); }
+  .c10 { background: linear-gradient(90deg, #4ade80, #86efac); }
+
+  /* Marcas table */
+  .marcas-table { width: 100%; border-collapse: collapse; }
+  .marcas-table th {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 0.5rem 0.75rem;
+    text-align: right;
+    font-weight: 400;
+  }
+  .marcas-table th:first-child { text-align: left; }
+
+  .marcas-table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    border-top: 1px solid var(--border);
+    text-align: right;
+  }
+  .marcas-table td:first-child {
+    text-align: left;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.8rem;
+  }
+
+  .marcas-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Total row */
+  .total-row td {
+    font-weight: 700;
+    color: var(--text) !important;
+    border-top: 2px solid rgba(255,255,255,0.12) !important;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  /* Highlight chip */
+  .chip {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+  }
+  .chip.pos { background: rgba(0,229,160,0.1); color: var(--accent); }
+  .chip.neg { background: rgba(255,77,109,0.1); color: var(--red); }
+
+  /* Web highlight row */
+  .web-highlight {
+    background: linear-gradient(90deg, rgba(0,229,160,0.05), transparent);
+    border-radius: 6px;
+  }
+
+  @media (max-width: 900px) {
+    main { padding: 1.5rem; }
+    header { padding: 1.5rem; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .bottom-row { grid-template-columns: 1fr; }
+    .tiendas-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">FP</div>
+    <div>
+      <div class="logo-text">FITPOINT</div>
+      <div class="logo-sub">Dashboard de Ventas</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="date-badge">09/03/2026 — 22/03/2026</div>
+    <div class="period-label">Periodo actual</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card ventas">
+      <div class="kpi-label">Ventas Totales</div>
+      <div class="kpi-value">404.93 mil</div>
+      <div class="kpi-meta">
+        <span class="kpi-ly">LY: 327.65 mil</span>
+        <span class="kpi-var pos">▲ 23.58%</span>
+      </div>
+    </div>
+    <div class="kpi-card unid">
+      <div class="kpi-label">Unidades</div>
+      <div class="kpi-value">4 mil</div>
+      <div class="kpi-meta">
+        <span class="kpi-ly">LY: 3 mil</span>
+        <span class="kpi-var pos">▲ 41.25%</span>
+      </div>
+    </div>
+    <div class="kpi-card contri">
+      <div class="kpi-label">Contribución</div>
+      <div class="kpi-value">200.53 mil</div>
+      <div class="kpi-meta">
+        <span class="kpi-ly">LY: 168.77 mil</span>
+        <span class="kpi-var pos">▲ 18.82%</span>
+      </div>
+    </div>
+    <div class="kpi-card mg">
+      <div class="kpi-label">Margen %</div>
+      <div class="kpi-value">49.52%</div>
+      <div class="kpi-meta">
+        <span class="kpi-ly">LY: 51.51%</span>
+        <span class="kpi-var neg">▼ 1.99%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tiendas -->
+  <div class="tiendas-section">
+    <div class="section-title">Tiendas Físicas & Web</div>
+    <div class="tiendas-grid">
+
+      <!-- FP Jockey -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">JOCKEY</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">89,130</div>
+        <div class="tienda-ly">LY: 105,620 · <span style="color:var(--red)">▼ 15.61%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">715</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">46,687</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">52.38%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:22%"></div></div>
+          <span class="tienda-pct">22% del total</span>
+        </div>
+      </div>
+
+      <!-- FP MP Trujillo -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">MP TRUJILLO</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">83,309</div>
+        <div class="tienda-ly">LY: 62,187 · <span style="color:var(--accent)">▲ 33.96%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">774</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">43,351</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">52.04%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:20.5%"></div></div>
+          <span class="tienda-pct">20.6% del total</span>
+        </div>
+      </div>
+
+      <!-- FP Salaverry -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">SALAVERRY</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">62,215</div>
+        <div class="tienda-ly">LY: 59,155 · <span style="color:var(--accent)">▲ 5.17%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">627</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">29,799</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">47.90%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:15.3%"></div></div>
+          <span class="tienda-pct">15.3% del total</span>
+        </div>
+      </div>
+
+      <!-- FP MP Arequipa -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">MP AREQUIPA</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">48,108</div>
+        <div class="tienda-ly">LY: 34,597 · <span style="color:var(--accent)">▲ 39.05%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">595</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">24,344</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">50.60%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:11.8%"></div></div>
+          <span class="tienda-pct">11.8% del total</span>
+        </div>
+      </div>
+
+      <!-- FP RP Piura -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">RP PIURA</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">38,005</div>
+        <div class="tienda-ly">Sin dato LY</div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">407</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">18,398</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">48.41%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:9.4%"></div></div>
+          <span class="tienda-pct">9.4% del total</span>
+        </div>
+      </div>
+
+      <!-- FP Primavera -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">PRIMAVERA</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">32,328</div>
+        <div class="tienda-ly">LY: 30,309 · <span style="color:var(--accent)">▲ 6.66%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">415</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">13,598</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">42.06%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:7.9%"></div></div>
+          <span class="tienda-pct">7.9% del total</span>
+        </div>
+      </div>
+
+      <!-- FP Plaza Norte -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">PLAZA NORTE</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">21,261</div>
+        <div class="tienda-ly">Sin dato LY</div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">321</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">8,882</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">41.78%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:5.2%"></div></div>
+          <span class="tienda-pct">5.2% del total</span>
+        </div>
+      </div>
+
+      <!-- FP La Molina -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">LA MOLINA</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">16,210</div>
+        <div class="tienda-ly">LY: 23,924 · <span style="color:var(--red)">▼ 32.24%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">228</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">7,790</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">48.06%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:3.9%"></div></div>
+          <span class="tienda-pct">3.9% del total</span>
+        </div>
+      </div>
+
+      <!-- FP Asia -->
+      <div class="tienda-card">
+        <div class="tienda-header">
+          <div class="tienda-name">ASIA</div>
+          <span class="tienda-tag store">Tienda</span>
+        </div>
+        <div class="tienda-ventas">14,359</div>
+        <div class="tienda-ly">LY: 11,859 · <span style="color:var(--accent)">▲ 21.08%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">198</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">7,680</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value neutral">53.49%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:3.5%"></div></div>
+          <span class="tienda-pct">3.5% del total</span>
+        </div>
+      </div>
+
+      <!-- WEB (FP digital) -->
+      <div class="tienda-card web-card">
+        <div class="tienda-header">
+          <div class="tienda-name" style="color:var(--accent)">WEB / FP</div>
+          <span class="tienda-tag web">Online</span>
+        </div>
+        <div class="tienda-ventas" style="color:var(--accent)">44,227</div>
+        <div class="tienda-ly">LY: 23,723 · <span style="color:var(--accent)">▲ 86.43%</span></div>
+        <div class="tienda-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Unid</div>
+            <div class="metric-value neutral">228</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Contri</div>
+            <div class="metric-value yellow">23,797</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MG%</div>
+            <div class="metric-value pos">53.81%</div>
+          </div>
+        </div>
+        <div class="tienda-bar-wrapper">
+          <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:10.9%; background:var(--accent)"></div></div>
+          <span class="tienda-pct">10.9% del total</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom row: Marcas + Agrupación -->
+  <div class="bottom-row">
+
+    <!-- Marcas -->
+    <div class="panel">
+      <div class="panel-title">Ventas por Marca</div>
+      <div class="bar-row">
+        <span class="bar-label">ASICS</span>
+        <div class="bar-track"><div class="bar-fill c1" style="width:51%">206,169</div></div>
+        <span class="bar-amount" style="color:var(--accent3)">51.0%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">NEW BALANCE</span>
+        <div class="bar-track"><div class="bar-fill c2" style="width:15.5%">62,701</div></div>
+        <span class="bar-amount" style="color:var(--accent)">15.5%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">ADIDAS</span>
+        <div class="bar-track"><div class="bar-fill c3" style="width:9.4%">38,135</div></div>
+        <span class="bar-amount" style="color:var(--accent2)">9.4%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">GARMIN</span>
+        <div class="bar-track"><div class="bar-fill c4" style="width:6.3%">25,351</div></div>
+        <span class="bar-amount">6.3%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">2XU</span>
+        <div class="bar-track"><div class="bar-fill c5" style="width:4.4%">17,795</div></div>
+        <span class="bar-amount">4.4%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">OOFOS</span>
+        <div class="bar-track"><div class="bar-fill c6" style="width:2.4%">9,524</div></div>
+        <span class="bar-amount">2.4%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">361</span>
+        <div class="bar-track"><div class="bar-fill c7" style="width:1.9%">7,603</div></div>
+        <span class="bar-amount">1.9%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">SIS</span>
+        <div class="bar-track"><div class="bar-fill c8" style="width:1.4%">5,570</div></div>
+        <span class="bar-amount">1.4%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">JOMA</span>
+        <div class="bar-track"><div class="bar-fill c9" style="width:1.1%">4,555</div></div>
+        <span class="bar-amount">1.1%</span>
+      </div>
+    </div>
+
+    <!-- Agrupación -->
+    <div class="panel">
+      <div class="panel-title">Ventas por Categoría</div>
+      <div class="bar-row">
+        <span class="bar-label">Running</span>
+        <div class="bar-track"><div class="bar-fill c1" style="width:64%">257,987</div></div>
+        <span class="bar-amount" style="color:var(--accent3)">63.7%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sin Definir</span>
+        <div class="bar-track"><div class="bar-fill c5" style="width:11.7%">47,487</div></div>
+        <span class="bar-amount">11.7%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">CPS-Volley</span>
+        <div class="bar-track"><div class="bar-fill c2" style="width:6.8%">27,409</div></div>
+        <span class="bar-amount">6.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Training</span>
+        <div class="bar-track"><div class="bar-fill c3" style="width:5.3%">21,396</div></div>
+        <span class="bar-amount">5.3%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">CPS-Tennis</span>
+        <div class="bar-track"><div class="bar-fill c4" style="width:4.8%">19,238</div></div>
+        <span class="bar-amount">4.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Trail Running</span>
+        <div class="bar-track"><div class="bar-fill c6" style="width:2.7%">10,786</div></div>
+        <span class="bar-amount">2.7%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">CPS</span>
+        <div class="bar-track"><div class="bar-fill c7" style="width:1.6%">6,496</div></div>
+        <span class="bar-amount">1.6%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Recovery</span>
+        <div class="bar-track"><div class="bar-fill c8" style="width:1.5%">6,255</div></div>
+        <span class="bar-amount">1.5%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Slide</span>
+        <div class="bar-track"><div class="bar-fill c10" style="width:0.9%">3,811</div></div>
+        <span class="bar-amount">0.9%</span>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  FITPOINT · REPORTE DE VENTAS · 09/03/2026 – 22/03/2026 · DATOS INTERNOS
+</footer>
+
+</body>
+</html>
