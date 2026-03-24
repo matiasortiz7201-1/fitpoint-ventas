@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitPoint — Dashboard de Ventas</title>
+<title>FitPoint — Análisis Cyber Lunes</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -23,355 +23,260 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
 
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.5;
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
   }
 
+  /* HEADER */
   header {
-    padding: 2rem 3rem 1.5rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    background: linear-gradient(90deg, #0d1520 0%, #0a1a14 100%);
     border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
+    padding: 1.25rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
   }
 
   header::after {
     content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
   }
 
-  .logo { display: flex; align-items: center; gap: 0.75rem; }
+  /* Cyber flash animation */
+  header::before {
+    content: 'CYBER';
+    position: absolute;
+    right: -20px; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: 8rem;
+    color: rgba(0,229,160,0.04);
+    letter-spacing: 10px;
+    pointer-events: none;
+  }
 
-  .logo-icon {
-    width: 40px; height: 40px;
+  .logo-area { display: flex; align-items: center; gap: 1rem; }
+
+  .logo-box {
     background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display);
-    font-size: 1.2rem;
     color: #000;
-  }
-
-  .logo-text {
     font-family: var(--font-display);
-    font-size: 2rem;
-    letter-spacing: 4px;
-    color: var(--text);
-    line-height: 1;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
   }
 
-  .logo-sub {
+  .logo-text { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 4px; line-height: 1; }
+  .logo-sub { font-size: 0.65rem; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; font-family: var(--font-mono); }
+
+  .header-right { display: flex; align-items: center; gap: 1rem; }
+
+  .cyber-badge {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--accent), #40ffbe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    border: 1px solid rgba(0,229,160,0.3);
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(0,229,160,0.2); }
+    50% { box-shadow: 0 0 20px rgba(0,229,160,0.4); }
+  }
+
+  .date-pill {
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: var(--muted);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-family: var(--font-mono);
-  }
-
-  .date-badge {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--accent);
-    background: rgba(0,229,160,0.08);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
     padding: 0.3rem 0.75rem;
     border-radius: 20px;
-    border: 1px solid rgba(0,229,160,0.2);
     letter-spacing: 1px;
-  }
-
-  .period-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: right;
   }
 
   main { padding: 2rem 3rem; max-width: 1600px; margin: 0 auto; }
 
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .tab-btn {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab-btn:hover { border-color: rgba(77,159,255,0.3); color: var(--text); }
-
-  .tab-btn.active {
-    background: rgba(77,159,255,0.1);
-    border-color: rgba(77,159,255,0.4);
-    color: var(--accent3);
-  }
-
-  .tab-btn.web-tab.active {
-    background: rgba(0,229,160,0.1);
-    border-color: rgba(0,229,160,0.4);
-    color: var(--accent);
-  }
-
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* KPI Strip */
-  .kpi-strip {
+  /* ── KPI HERO ── */
+  .kpi-hero {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 0.6s ease both;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.5s ease both;
   }
 
   .kpi-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
+    padding: 1.4rem 1.5rem;
+    position: relative; overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
 
   .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
   }
 
-  .kpi-card.ventas::before { background: var(--accent3); }
-  .kpi-card.unid::before { background: var(--accent); }
-  .kpi-card.contri::before { background: var(--accent2); }
-  .kpi-card.mg::before { background: var(--red); }
+  .kpi-card.v::before { background: var(--accent3); }
+  .kpi-card.u::before { background: var(--accent); }
+  .kpi-card.c::before { background: var(--accent2); }
+  .kpi-card.m::before { background: var(--red); }
 
-  .kpi-label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
-  }
+  .kpi-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .kpi-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
 
-  .kpi-value {
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 0.75rem;
-  }
+  .kpi-value { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 2px; line-height: 1; margin-bottom: 0.6rem; }
+  .kpi-card.v .kpi-value { color: var(--accent3); }
+  .kpi-card.u .kpi-value { color: var(--accent); }
+  .kpi-card.c .kpi-value { color: var(--accent2); }
+  .kpi-card.m .kpi-value { color: var(--red); }
 
-  .kpi-card.ventas .kpi-value { color: var(--accent3); }
-  .kpi-card.unid .kpi-value { color: var(--accent); }
-  .kpi-card.contri .kpi-value { color: var(--accent2); }
-  .kpi-card.mg .kpi-value { color: var(--red); }
-
-  .kpi-meta { display: flex; flex-direction: column; gap: 0.25rem; }
-  .kpi-ly { font-size: 0.75rem; color: var(--muted); font-family: var(--font-mono); }
-  .kpi-var { font-size: 0.8rem; font-weight: 600; font-family: var(--font-mono); }
-  .kpi-var.pos { color: var(--accent); }
-  .kpi-var.neg { color: var(--red); }
-
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    letter-spacing: 4px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  .tiendas-section { margin-bottom: 2.5rem; animation: fadeUp 0.6s 0.1s ease both; }
-
-  .tiendas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-
-  .tienda-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.25rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.25s;
-  }
-
-  .tienda-card:hover {
-    border-color: rgba(77,159,255,0.3);
-    box-shadow: 0 4px 24px rgba(77,159,255,0.08);
-    transform: translateY(-2px);
-  }
-
-  .tienda-card.web-card {
-    border-color: rgba(0,229,160,0.2);
-    background: linear-gradient(135deg, #0d1520 0%, #0a1e18 100%);
-  }
-
-  .tienda-card.web-card:hover {
-    border-color: rgba(0,229,160,0.4);
-    box-shadow: 0 4px 24px rgba(0,229,160,0.1);
-  }
-
-  .tienda-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-
-  .tienda-name { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 3px; color: var(--text); }
-
-  .tienda-tag {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-
-  .tienda-tag.store { background: rgba(77,159,255,0.12); color: var(--accent3); border: 1px solid rgba(77,159,255,0.2); }
-  .tienda-tag.web { background: rgba(0,229,160,0.12); color: var(--accent); border: 1px solid rgba(0,229,160,0.2); }
-
-  .tienda-ventas { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 2px; color: var(--text); margin-bottom: 0.25rem; }
-
-  .tienda-ly { font-size: 0.7rem; color: var(--muted); font-family: var(--font-mono); margin-bottom: 0.75rem; }
-
-  .tienda-metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-  }
-
-  .metric-box {
+  .kpi-vs {
+    display: flex; align-items: center; gap: 0.5rem;
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 0.5rem;
-    text-align: center;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.4rem;
   }
 
-  .metric-label {
-    font-size: 0.58rem;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-family: var(--font-mono);
-    margin-bottom: 0.2rem;
-  }
+  .kpi-vs-label { font-size: 0.6rem; color: var(--muted); font-family: var(--font-mono); letter-spacing: 1px; }
+  .kpi-vs-val { font-size: 0.75rem; color: var(--text); font-family: var(--font-mono); margin-left: auto; }
 
-  .metric-value { font-size: 0.8rem; font-weight: 600; font-family: var(--font-mono); }
-  .metric-value.pos { color: var(--accent); }
-  .metric-value.neg { color: var(--red); }
-  .metric-value.neutral { color: var(--text); }
-  .metric-value.yellow { color: var(--accent2); }
+  .kpi-var { font-size: 0.85rem; font-weight: 700; font-family: var(--font-mono); }
+  .pos { color: var(--accent); }
+  .neg { color: var(--red); }
+  .neutral { color: var(--muted); }
 
-  .tienda-bar-wrapper { margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  /* ── SECTION TITLE ── */
+  .sec { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  .tienda-bar-bg {
-    flex: 1;
-    height: 3px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 2px;
+  /* ── TIENDAS TABLE ── */
+  .tiendas-section { margin-bottom: 2rem; animation: fadeUp 0.5s 0.1s ease both; }
+
+  .tiendas-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     overflow: hidden;
   }
 
-  .tienda-bar-fill { height: 100%; border-radius: 2px; background: var(--accent3); transition: width 1s ease; }
-  .tienda-card.web-card .tienda-bar-fill { background: var(--accent); }
+  table { width: 100%; border-collapse: collapse; }
 
-  .tienda-pct { font-size: 0.65rem; color: var(--muted); font-family: var(--font-mono); white-space: nowrap; }
-
-  .bottom-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    animation: fadeUp 0.6s 0.2s ease both;
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.75rem 1rem;
+    text-align: right;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
   }
+
+  thead th:first-child { text-align: left; }
+
+  tbody td {
+    padding: 0.65rem 1rem;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    text-align: right;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text);
+  }
+
+  tbody td:first-child {
+    text-align: left;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--text);
+  }
+
+  tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .total-row td {
+    border-top: 1px solid rgba(255,255,255,0.12) !important;
+    border-bottom: none !important;
+    font-weight: 700;
+    color: var(--text) !important;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .var-chip {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+  }
+
+  .var-chip.pos { background: rgba(0,229,160,0.1); color: var(--accent); }
+  .var-chip.neg { background: rgba(255,77,109,0.1); color: var(--red); }
+  .var-chip.neu { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+  .mg-bar-cell { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; }
+
+  .mg-mini-bar {
+    width: 60px; height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .mg-mini-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent2), #ffd97a);
+  }
+
+  /* ── MARCAS + MODELOS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; animation: fadeUp 0.5s 0.15s ease both; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; animation: fadeUp 0.5s 0.2s ease both; }
 
   .panel {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.4rem;
   }
 
   .panel-title {
     font-family: var(--font-display);
-    font-size: 1rem;
-    letter-spacing: 3px;
+    font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;
     color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.65rem;
     border-bottom: 1px solid var(--border);
   }
 
-  .bar-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-
-  .bar-label { font-size: 0.75rem; color: var(--text); width: 110px; flex-shrink: 0; font-family: var(--font-body); font-weight: 500; }
-
-  .bar-track { flex: 1; height: 22px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; position: relative; }
-
-  .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    padding: 0 0.5rem;
-    font-size: 0.65rem;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    color: rgba(0,0,0,0.8);
-    transition: width 1.2s ease;
-    white-space: nowrap;
-  }
-
-  .bar-amount { font-size: 0.7rem; color: var(--muted); font-family: var(--font-mono); width: 70px; text-align: right; flex-shrink: 0; }
+  /* bar rows */
+  .bar-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .bar-label { font-size: 0.72rem; color: var(--text); width: 130px; flex-shrink: 0; font-family: var(--font-body); font-weight: 500; }
+  .bar-track { flex: 1; height: 20px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 0.4rem; font-size: 0.6rem; font-family: var(--font-mono); color: rgba(0,0,0,0.8); transition: width 1.2s ease; white-space: nowrap; }
+  .bar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.1rem; width: 70px; flex-shrink: 0; }
+  .bar-amount { font-size: 0.68rem; color: var(--muted); font-family: var(--font-mono); }
+  .bar-var { font-size: 0.62rem; font-family: var(--font-mono); font-weight: 600; }
 
   .c1 { background: linear-gradient(90deg, #4d9fff, #7bbdff); }
   .c2 { background: linear-gradient(90deg, #00e5a0, #40ffbe); }
@@ -383,912 +288,741 @@
   .c8 { background: linear-gradient(90deg, #e879f9, #f0abfc); }
   .c9 { background: linear-gradient(90deg, #60a5fa, #93c5fd); }
   .c10 { background: linear-gradient(90deg, #4ade80, #86efac); }
+  .c11 { background: linear-gradient(90deg, #f472b6, #f9a8d4); }
+  .c12 { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
 
-  /* Best Sellers */
-  .bestseller-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 0.75rem;
-  }
+  /* ── BEST SELLERS ── */
+  .bs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 0.7rem; }
 
   .bs-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 1rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
+    padding: 0.9rem 1rem;
+    position: relative; transition: all 0.2s;
   }
 
-  .bs-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    border-color: rgba(255,194,51,0.25);
-  }
+  .bs-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); border-color: rgba(255,194,51,0.2); }
+  .bs-card.r1 { border-color: rgba(255,194,51,0.35); background: linear-gradient(135deg,#0d1520,#1a1508); }
+  .bs-card.r2 { border-color: rgba(180,180,180,0.2); }
+  .bs-card.r3 { border-color: rgba(180,120,60,0.2); }
 
-  .bs-card.rank-1 { border-color: rgba(255,194,51,0.35); background: linear-gradient(135deg, #0d1520, #1a1508); }
-  .bs-card.rank-2 { border-color: rgba(180,180,180,0.25); background: linear-gradient(135deg, #0d1520, #131318); }
-  .bs-card.rank-3 { border-color: rgba(180,120,60,0.25); background: linear-gradient(135deg, #0d1520, #150f08); }
+  .bs-rank { position: absolute; top: 0.6rem; right: 0.8rem; font-family: var(--font-display); font-size: 1.5rem; color: rgba(255,255,255,0.05); }
+  .bs-card.r1 .bs-rank { color: rgba(255,194,51,0.18); }
 
-  .bs-rank {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    line-height: 1;
-    color: var(--muted);
-    opacity: 0.4;
-    position: absolute;
-    top: 0.7rem;
-    right: 0.9rem;
-  }
+  .bs-name { font-size: 0.82rem; font-weight: 600; color: var(--text); padding-right: 1.5rem; margin-bottom: 0.1rem; }
+  .bs-brand { font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
 
-  .bs-card.rank-1 .bs-rank { color: var(--accent2); opacity: 0.8; }
-  .bs-card.rank-2 .bs-rank { color: #c0c0c0; opacity: 0.7; }
-  .bs-card.rank-3 .bs-rank { color: #cd7f32; opacity: 0.7; }
+  .bs-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.25rem; border-top: 1px solid var(--border); padding-top: 0.5rem; }
+  .bs-stat { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+  .bs-sl { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .bs-sv { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; color: var(--text); }
+  .bs-sv.mg { color: var(--accent2); }
+  .bs-sv.hi { color: var(--accent); }
 
-  .bs-name {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.88rem;
-    color: var(--text);
-    padding-right: 2rem;
-  }
-
-  .bs-brand {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 0.1rem;
-  }
-
-  .bs-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.3rem;
-    border-top: 1px solid var(--border);
-    padding-top: 0.6rem;
-  }
-
-  .bs-stat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
-
-  .bs-stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .bs-stat-val {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  .bs-stat-val.mg { color: var(--accent2); }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  footer {
-    text-align: center;
-    padding: 2rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    border-top: 1px solid var(--border);
-    margin-top: 1rem;
-  }
-
-  /* Web tab single row table */
-  .web-summary {
+  /* ── MG SPOTLIGHT ── */
+  .mg-spotlight {
     background: var(--surface);
-    border: 1px solid rgba(0,229,160,0.2);
+    border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.4rem;
     margin-bottom: 2rem;
+    animation: fadeUp 0.5s 0.25s ease both;
   }
 
-  .web-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
+  .mg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 0.75rem; margin-top: 0.75rem; }
+
+  .mg-tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem;
+    text-align: center;
+    transition: all 0.2s;
   }
 
-  .web-stat { text-align: center; }
+  .mg-tile:hover { transform: translateY(-2px); }
+  .mg-tile.winner { border-color: rgba(0,229,160,0.3); background: rgba(0,229,160,0.05); }
+  .mg-tile.loser { border-color: rgba(255,77,109,0.2); }
 
-  .web-stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
+  .mg-tile-brand { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .mg-tile-val { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 1px; line-height: 1; margin-bottom: 0.25rem; }
+  .mg-tile.winner .mg-tile-val { color: var(--accent); }
+  .mg-tile.loser .mg-tile-val { color: var(--red); }
+  .mg-tile .mg-tile-val { color: var(--accent2); }
+
+  .mg-tile-ly { font-size: 0.62rem; color: var(--muted); font-family: var(--font-mono); }
+  .mg-tile-var { font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700; margin-top: 0.2rem; }
+
+  /* ── CATEG ── */
+  .categ-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
   }
 
-  .web-stat-value {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    color: var(--accent);
+  .categ-name { font-size: 0.75rem; color: var(--text); width: 120px; flex-shrink: 0; }
+  .categ-track { flex: 1; height: 18px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+  .categ-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 0.4rem; font-size: 0.6rem; font-family: var(--font-mono); color: rgba(0,0,0,0.8); white-space: nowrap; }
+  .categ-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.1rem; width: 90px; flex-shrink: 0; }
+  .categ-val { font-size: 0.7rem; color: var(--text); font-family: var(--font-mono); }
+  .categ-mg { font-size: 0.62rem; color: var(--accent2); font-family: var(--font-mono); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  footer { text-align: center; padding: 1.5rem; font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 1rem; }
+
+  /* alert box */
+  .insight-box {
+    background: rgba(255,194,51,0.05);
+    border: 1px solid rgba(255,194,51,0.2);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: flex-start; gap: 0.6rem;
   }
 
-  .web-stat-sub {
-    font-size: 0.65rem;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    margin-top: 0.2rem;
-  }
+  .insight-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .insight-text { font-size: 0.78rem; color: var(--text); line-height: 1.5; }
+  .insight-text strong { color: var(--accent2); }
 
   @media (max-width: 900px) {
     main { padding: 1.5rem; }
-    header { padding: 1.5rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
-    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
-    .bottom-row { grid-template-columns: 1fr; }
-    .tiendas-grid { grid-template-columns: 1fr 1fr; }
-    .web-summary-grid { grid-template-columns: repeat(3, 1fr); }
+    header { padding: 1rem 1.5rem; }
+    .kpi-hero { grid-template-columns: repeat(2,1fr); }
+    .two-col, .three-col { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-icon">FP</div>
+  <div class="logo-area">
+    <div class="logo-box">FP</div>
     <div>
       <div class="logo-text">FITPOINT</div>
-      <div class="logo-sub">Dashboard de Ventas</div>
+      <div class="logo-sub">Análisis Cyber · Lunes</div>
     </div>
   </div>
-  <div>
-    <div class="date-badge">16/03/2026 — 22/03/2026</div>
-    <div class="period-label">Periodo actual</div>
+  <div class="header-right">
+    <div class="cyber-badge">⚡ CYBER LUNES</div>
+    <div class="date-pill">23/03/2026</div>
   </div>
 </header>
 
 <main>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('tiendas', this)">🏪 Tiendas Físicas</button>
-    <button class="tab-btn web-tab" onclick="showTab('web', this)">🌐 Canal Web</button>
+  <!-- Insights rápidos -->
+  <div style="margin-bottom:1.5rem; animation: fadeUp 0.4s ease both;">
+    <div class="insight-box">
+      <div class="insight-icon">📈</div>
+      <div class="insight-text">
+        <strong>Ventas +33.38% vs LY</strong> — Buen desempeño cyber con S/ 22,587 en ventas totales.
+        Las unidades crecieron <strong>+16.81%</strong> (139 vs 119 LY), lo que indica ticket promedio más alto.
+      </div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-icon">⚠️</div>
+      <div class="insight-text">
+        <strong>MG% en 43.57% vs 43.62% LY (▼0.05%)</strong> — Margen casi plano. El Cyber presionó levemente los márgenes pero se mantuvo controlado.
+        Salaverry y Molina fueron los que más contribuyeron en margen relativo.
+      </div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-icon">🏪</div>
+      <div class="insight-text">
+        <strong>Salaverry lidera con S/ 8,041</strong> — creció <strong>+156.81%</strong> vs LY, la tienda con mejor desempeño cyber.
+        MP Arequipa cayó <strong>▼73.86%</strong>, la más afectada del período.
+      </div>
+    </div>
   </div>
 
-  <!-- ===== TAB TIENDAS ===== -->
-  <div id="tab-tiendas" class="tab-content active">
+  <!-- KPI HERO -->
+  <div class="kpi-hero">
+    <div class="kpi-card v">
+      <div class="kpi-label">💰 Ventas Cyber</div>
+      <div class="kpi-value">22,587</div>
+      <div class="kpi-vs">
+        <span class="kpi-vs-label">LY</span>
+        <span class="kpi-vs-val">16,935</span>
+      </div>
+      <div class="kpi-var pos">▲ 33.38%</div>
+    </div>
+    <div class="kpi-card u">
+      <div class="kpi-label">📦 Unidades</div>
+      <div class="kpi-value">139</div>
+      <div class="kpi-vs">
+        <span class="kpi-vs-label">LY</span>
+        <span class="kpi-vs-val">119</span>
+      </div>
+      <div class="kpi-var pos">▲ 16.81%</div>
+    </div>
+    <div class="kpi-card c">
+      <div class="kpi-label">💵 Contribución</div>
+      <div class="kpi-value">9,841</div>
+      <div class="kpi-vs">
+        <span class="kpi-vs-label">LY</span>
+        <span class="kpi-vs-val">7,387</span>
+      </div>
+      <div class="kpi-var pos">▲ 33.22%</div>
+    </div>
+    <div class="kpi-card m">
+      <div class="kpi-label">📊 Margen %</div>
+      <div class="kpi-value">43.57%</div>
+      <div class="kpi-vs">
+        <span class="kpi-vs-label">LY</span>
+        <span class="kpi-vs-val">43.62%</span>
+      </div>
+      <div class="kpi-var neg">▼ 0.05%</div>
+    </div>
+  </div>
 
-    <!-- KPIs Tiendas -->
-    <div class="kpi-strip">
-      <div class="kpi-card ventas">
-        <div class="kpi-label">Ventas Totales</div>
-        <div class="kpi-value">201.27 mil</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 154.93 mil</span>
-          <span class="kpi-var pos">▲ 29.91%</span>
-        </div>
+  <!-- VENTAS POR TIENDA -->
+  <div class="tiendas-section">
+    <div class="sec">Ventas por Tienda vs LY</div>
+    <div class="tiendas-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tienda</th>
+            <th>Ventas</th>
+            <th>LY</th>
+            <th>Var%</th>
+            <th>Unid</th>
+            <th>Unid LY</th>
+            <th>Var% Unid</th>
+            <th>Contri</th>
+            <th>MG%</th>
+            <th>MG% LY</th>
+            <th>Vr% MG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FP SALAVERRY</td>
+            <td>8,041</td>
+            <td>3,131</td>
+            <td><span class="var-chip pos">▲ 156.81%</span></td>
+            <td>34</td>
+            <td>13</td>
+            <td><span class="var-chip pos">▲ 161.54%</span></td>
+            <td>3,671</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:45.65%"></div></div>
+                45.65%
+              </div>
+            </td>
+            <td>58.38%</td>
+            <td><span class="var-chip neg">▼ 12.73%</span></td>
+          </tr>
+          <tr>
+            <td>FP MP TRUJILLO</td>
+            <td>4,041</td>
+            <td>2,808</td>
+            <td><span class="var-chip pos">▲ 43.93%</span></td>
+            <td>24</td>
+            <td>30</td>
+            <td><span class="var-chip neg">▼ 20.00%</span></td>
+            <td>1,708</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:42.26%"></div></div>
+                42.26%
+              </div>
+            </td>
+            <td>45.47%</td>
+            <td><span class="var-chip neg">▼ 3.21%</span></td>
+          </tr>
+          <tr>
+            <td>FP PRIMAVERA</td>
+            <td>3,494</td>
+            <td>2,213</td>
+            <td><span class="var-chip pos">▲ 57.91%</span></td>
+            <td>18</td>
+            <td>17</td>
+            <td><span class="var-chip pos">▲ 5.88%</span></td>
+            <td>1,575</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:45.07%"></div></div>
+                45.07%
+              </div>
+            </td>
+            <td>43.28%</td>
+            <td><span class="var-chip pos">▲ 1.79%</span></td>
+          </tr>
+          <tr>
+            <td>FP JOCKEY</td>
+            <td>2,706</td>
+            <td>3,063</td>
+            <td><span class="var-chip neg">▼ 11.65%</span></td>
+            <td>17</td>
+            <td>14</td>
+            <td><span class="var-chip pos">▲ 21.43%</span></td>
+            <td>1,363</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:50.38%"></div></div>
+                50.38%
+              </div>
+            </td>
+            <td>42.46%</td>
+            <td><span class="var-chip pos">▲ 7.91%</span></td>
+          </tr>
+          <tr>
+            <td>FP LA MOLINA</td>
+            <td>1,438</td>
+            <td>1,047</td>
+            <td><span class="var-chip pos">▲ 37.29%</span></td>
+            <td>22</td>
+            <td>10</td>
+            <td><span class="var-chip pos">▲ 120.00%</span></td>
+            <td>454</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:31.64%"></div></div>
+                31.64%
+              </div>
+            </td>
+            <td>33.82%</td>
+            <td><span class="var-chip neg">▼ 2.18%</span></td>
+          </tr>
+          <tr>
+            <td>FP MP AREQUIPA</td>
+            <td>1,140</td>
+            <td>4,358</td>
+            <td><span class="var-chip neg">▼ 73.86%</span></td>
+            <td>7</td>
+            <td>30</td>
+            <td><span class="var-chip neg">▼ 76.67%</span></td>
+            <td>622</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:54.56%"></div></div>
+                54.56%
+              </div>
+            </td>
+            <td>35.69%</td>
+            <td><span class="var-chip pos">▲ 18.87%</span></td>
+          </tr>
+          <tr>
+            <td>FP RP PIURA</td>
+            <td>957</td>
+            <td>—</td>
+            <td><span class="var-chip neu">Nueva</span></td>
+            <td>9</td>
+            <td>—</td>
+            <td><span class="var-chip neu">—</span></td>
+            <td>256</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:26.73%"></div></div>
+                26.73%
+              </div>
+            </td>
+            <td>—</td>
+            <td><span class="var-chip neu">—</span></td>
+          </tr>
+          <tr>
+            <td>FP PLAZA NORTE</td>
+            <td>551</td>
+            <td>—</td>
+            <td><span class="var-chip neu">Nueva</span></td>
+            <td>6</td>
+            <td>—</td>
+            <td><span class="var-chip neu">—</span></td>
+            <td>154</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:28.02%"></div></div>
+                28.02%
+              </div>
+            </td>
+            <td>—</td>
+            <td><span class="var-chip neu">—</span></td>
+          </tr>
+          <tr>
+            <td>FP ASIA</td>
+            <td>220</td>
+            <td>315</td>
+            <td><span class="var-chip neg">▼ 30.13%</span></td>
+            <td>2</td>
+            <td>5</td>
+            <td><span class="var-chip neg">▼ 60.00%</span></td>
+            <td>37</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:16.96%"></div></div>
+                16.96%
+              </div>
+            </td>
+            <td>36.23%</td>
+            <td><span class="var-chip neg">▼ 19.27%</span></td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL</td>
+            <td>22,587</td>
+            <td>16,935</td>
+            <td><span class="var-chip pos">▲ 33.38%</span></td>
+            <td>139</td>
+            <td>119</td>
+            <td><span class="var-chip pos">▲ 16.81%</span></td>
+            <td>9,841</td>
+            <td>
+              <div class="mg-bar-cell">
+                <div class="mg-mini-bar"><div class="mg-mini-fill" style="width:43.57%"></div></div>
+                43.57%
+              </div>
+            </td>
+            <td>43.62%</td>
+            <td><span class="var-chip neg">▼ 0.05%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MG% SPOTLIGHT POR MARCA -->
+  <div class="mg-spotlight">
+    <div class="sec">MG% por Marca — Radar de Margen</div>
+    <div class="mg-grid">
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">ASICS</div>
+        <div class="mg-tile-val">53.21%</div>
+        <div class="mg-tile-ly">LY: 47.89%</div>
+        <div class="mg-tile-var pos">▲ 5.33%</div>
       </div>
-      <div class="kpi-card unid">
-        <div class="kpi-label">Unidades</div>
-        <div class="kpi-value">2,258</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 1,418</span>
-          <span class="kpi-var pos">▲ 59.24%</span>
-        </div>
+      <div class="mg-tile">
+        <div class="mg-tile-brand">NEW BALANCE</div>
+        <div class="mg-tile-val" style="color:var(--accent2)">29.02%</div>
+        <div class="mg-tile-ly">LY: 31.08%</div>
+        <div class="mg-tile-var neg">▼ 2.06%</div>
       </div>
-      <div class="kpi-card contri">
-        <div class="kpi-label">Contribución</div>
-        <div class="kpi-value">100.73 mil</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 79.76 mil</span>
-          <span class="kpi-var pos">▲ 26.29%</span>
-        </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">GARMIN</div>
+        <div class="mg-tile-val">32.60%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
       </div>
-      <div class="kpi-card mg">
-        <div class="kpi-label">Margen %</div>
-        <div class="kpi-value">50.05%</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 51.48%</span>
-          <span class="kpi-var neg">▼ 1.43%</span>
-        </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">ADIDAS</div>
+        <div class="mg-tile-val">44.75%</div>
+        <div class="mg-tile-ly">LY: 33.28%</div>
+        <div class="mg-tile-var pos">▲ 11.47%</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">SALOMON</div>
+        <div class="mg-tile-val">17.14%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">JOMA</div>
+        <div class="mg-tile-val">47.99%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
+      </div>
+      <div class="mg-tile">
+        <div class="mg-tile-brand">2XU</div>
+        <div class="mg-tile-val" style="color:var(--accent2)">39.37%</div>
+        <div class="mg-tile-ly">LY: 55.18%</div>
+        <div class="mg-tile-var neg">▼ 15.80%</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">SIS</div>
+        <div class="mg-tile-val">28.02%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">OOFOS</div>
+        <div class="mg-tile-val">58.41%</div>
+        <div class="mg-tile-ly">LY: 33.01%</div>
+        <div class="mg-tile-var pos">▲ 25.40%</div>
+      </div>
+      <div class="mg-tile">
+        <div class="mg-tile-brand">GU</div>
+        <div class="mg-tile-val" style="color:var(--accent2)">32.98%</div>
+        <div class="mg-tile-ly">LY: 33.36%</div>
+        <div class="mg-tile-var neg">▼ 0.38%</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">BUNNYHOP</div>
+        <div class="mg-tile-val">41.66%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
+      </div>
+      <div class="mg-tile winner">
+        <div class="mg-tile-brand">AETREX</div>
+        <div class="mg-tile-val">37.19%</div>
+        <div class="mg-tile-ly">LY: —</div>
+        <div class="mg-tile-var pos">Nueva</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARCAS + CATEGORÍAS -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Ventas por Marca vs LY</div>
+      <div class="bar-row">
+        <span class="bar-label">ASICS</span>
+        <div class="bar-track"><div class="bar-fill c1" style="width:54%">12,171</div></div>
+        <div class="bar-right"><span class="bar-amount">54.1%</span><span class="bar-var pos">▲ 5.79%</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">NEW BALANCE</span>
+        <div class="bar-track"><div class="bar-fill c2" style="width:17.7%">4,002</div></div>
+        <div class="bar-right"><span class="bar-amount">17.7%</span><span class="bar-var pos">▲ 71.56%</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">GARMIN</span>
+        <div class="bar-track"><div class="bar-fill c3" style="width:9.5%">2,135</div></div>
+        <div class="bar-right"><span class="bar-amount">9.5%</span><span class="bar-var neu">Nueva</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">ADIDAS</span>
+        <div class="bar-track"><div class="bar-fill c4" style="width:7.1%">1,613</div></div>
+        <div class="bar-right"><span class="bar-amount">7.1%</span><span class="bar-var pos">▲ 157.75%</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">SALOMON</span>
+        <div class="bar-track"><div class="bar-fill c5" style="width:2.3%">521</div></div>
+        <div class="bar-right"><span class="bar-amount">2.3%</span><span class="bar-var neu">Nueva</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">361</span>
+        <div class="bar-track"><div class="bar-fill c6" style="width:1.6%">363</div></div>
+        <div class="bar-right"><span class="bar-amount">1.6%</span><span class="bar-var neu">Nueva</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">JOMA</span>
+        <div class="bar-track"><div class="bar-fill c7" style="width:1.6%">356</div></div>
+        <div class="bar-right"><span class="bar-amount">1.6%</span><span class="bar-var neu">Nueva</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">2XU</span>
+        <div class="bar-track"><div class="bar-fill c8" style="width:1.2%">269</div></div>
+        <div class="bar-right"><span class="bar-amount">1.2%</span><span class="bar-var neg">▼ 25.51%</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">OOFOS</span>
+        <div class="bar-track"><div class="bar-fill c9" style="width:0.8%">169</div></div>
+        <div class="bar-right"><span class="bar-amount">0.7%</span><span class="bar-var neg">▼ 0.01%</span></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">GU</span>
+        <div class="bar-track"><div class="bar-fill c10" style="width:0.7%">156</div></div>
+        <div class="bar-right"><span class="bar-amount">0.7%</span><span class="bar-var pos">▲ 16.46%</span></div>
       </div>
     </div>
 
-    <!-- Tiendas Cards -->
-    <div class="tiendas-section">
-      <div class="section-title">Rendimiento por Tienda</div>
-      <div class="tiendas-grid">
+    <div class="panel">
+      <div class="panel-title">Ventas por Categoría + MG%</div>
+      <div class="categ-row">
+        <span class="categ-name">Running</span>
+        <div class="categ-track"><div class="categ-fill c1" style="width:64.7%">14,605</div></div>
+        <div class="categ-right"><span class="categ-val">▲ 24.53%</span><span class="categ-mg">MG 43.37%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Sin Definir</span>
+        <div class="categ-track"><div class="categ-fill c5" style="width:14.1%">3,177</div></div>
+        <div class="categ-right"><span class="categ-val pos">▲ 598.16%</span><span class="categ-mg">MG 29.45%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">CPS-Volley</span>
+        <div class="categ-track"><div class="categ-fill c2" style="width:10.8%">2,427</div></div>
+        <div class="categ-right"><span class="categ-val pos">▲ 178.08%</span><span class="categ-mg">MG 64.45%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Trail Running</span>
+        <div class="categ-track"><div class="categ-fill c3" style="width:5.3%">1,206</div></div>
+        <div class="categ-right"><span class="categ-val pos">▲ 295.47%</span><span class="categ-mg">MG 41.28%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">CPS</span>
+        <div class="categ-track"><div class="categ-fill c4" style="width:3.0%">679</div></div>
+        <div class="categ-right"><span class="categ-val pos">▲ 271.28%</span><span class="categ-mg">MG 55.84%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Slide</span>
+        <div class="categ-track"><div class="categ-fill c6" style="width:0.8%">169</div></div>
+        <div class="categ-right"><span class="categ-val neg">▼ 0.01%</span><span class="categ-mg">MG 58.41%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Training</span>
+        <div class="categ-track"><div class="categ-fill c7" style="width:0.7%">151</div></div>
+        <div class="categ-right"><span class="categ-val neg">▼ 88.45%</span><span class="categ-mg">MG -10.31%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Recovery</span>
+        <div class="categ-track"><div class="categ-fill c8" style="width:0.5%">108</div></div>
+        <div class="categ-right"><span class="categ-val neu">Nueva</span><span class="categ-mg">MG 26.25%</span></div>
+      </div>
+      <div class="categ-row">
+        <span class="categ-name">Tennis</span>
+        <div class="categ-track"><div class="categ-fill c9" style="width:0.3%">63</div></div>
+        <div class="categ-right"><span class="categ-val pos">▲ 149.80%</span><span class="categ-mg">MG 26.47%</span></div>
+      </div>
+    </div>
+  </div>
 
-        <!-- MP Trujillo -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">MP TRUJILLO</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">42,537</div>
-          <div class="tienda-ly">LY: 31,364 · <span style="color:var(--accent)">▲ 35.62%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">379</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">22,332</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">52.50%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:21.1%"></div></div>
-            <span class="tienda-pct">21.1% del total</span>
-          </div>
-        </div>
+  <!-- BEST SELLERS -->
+  <div class="sec">🏆 Modelos Best Seller — Cyber Lunes</div>
+  <div class="bs-grid" style="margin-bottom:2rem; animation: fadeUp 0.5s 0.25s ease both;">
 
-        <!-- Jockey -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">JOCKEY</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">39,372</div>
-          <div class="tienda-ly">LY: 46,519 · <span style="color:var(--red)">▼ 15.36%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">353</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">19,854</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">50.43%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:19.6%"></div></div>
-            <span class="tienda-pct">19.6% del total</span>
-          </div>
-        </div>
-
-        <!-- Salaverry -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">SALAVERRY</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">32,239</div>
-          <div class="tienda-ly">LY: 33,598 · <span style="color:var(--red)">▼ 4.05%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">336</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">16,669</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">51.70%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:16.0%"></div></div>
-            <span class="tienda-pct">16.0% del total</span>
-          </div>
-        </div>
-
-        <!-- MP Arequipa -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">MP AREQUIPA</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">25,047</div>
-          <div class="tienda-ly">LY: 14,093 · <span style="color:var(--accent)">▲ 77.72%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">387</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">13,083</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">52.23%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:12.4%"></div></div>
-            <span class="tienda-pct">12.4% del total</span>
-          </div>
-        </div>
-
-        <!-- RP Piura -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">RP PIURA</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">17,903</div>
-          <div class="tienda-ly">Sin dato LY</div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">208</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">8,210</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">45.86%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:8.9%"></div></div>
-            <span class="tienda-pct">8.9% del total</span>
-          </div>
-        </div>
-
-        <!-- Primavera -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">PRIMAVERA</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">15,689</div>
-          <div class="tienda-ly">LY: 13,114 · <span style="color:var(--accent)">▲ 19.64%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">192</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">6,771</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">43.16%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:7.8%"></div></div>
-            <span class="tienda-pct">7.8% del total</span>
-          </div>
-        </div>
-
-        <!-- Plaza Norte -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">PLAZA NORTE</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">10,672</div>
-          <div class="tienda-ly">Sin dato LY</div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">161</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">4,706</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">44.10%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:5.3%"></div></div>
-            <span class="tienda-pct">5.3% del total</span>
-          </div>
-        </div>
-
-        <!-- La Molina -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">LA MOLINA</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">9,178</div>
-          <div class="tienda-ly">LY: 10,639 · <span style="color:var(--red)">▼ 13.73%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">136</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">4,355</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">47.46%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:4.6%"></div></div>
-            <span class="tienda-pct">4.6% del total</span>
-          </div>
-        </div>
-
-        <!-- Asia -->
-        <div class="tienda-card">
-          <div class="tienda-header">
-            <div class="tienda-name">ASIA</div>
-            <span class="tienda-tag store">Tienda</span>
-          </div>
-          <div class="tienda-ventas">8,632</div>
-          <div class="tienda-ly">LY: 5,600 · <span style="color:var(--accent)">▲ 54.14%</span></div>
-          <div class="tienda-metrics">
-            <div class="metric-box">
-              <div class="metric-label">Unid</div>
-              <div class="metric-value neutral">106</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Contri</div>
-              <div class="metric-value yellow">4,747</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">MG%</div>
-              <div class="metric-value neutral">54.99%</div>
-            </div>
-          </div>
-          <div class="tienda-bar-wrapper">
-            <div class="tienda-bar-bg"><div class="tienda-bar-fill" style="width:4.3%"></div></div>
-            <span class="tienda-pct">4.3% del total</span>
-          </div>
-        </div>
-
+    <div class="bs-card r1">
+      <div class="bs-rank">#1</div>
+      <div class="bs-name">Novablast 5</div>
+      <div class="bs-brand">ASICS · ▲ 80.00% vs LY</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">2,135</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">6</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">982</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">46.00%</span></div>
       </div>
     </div>
 
-    <!-- Best Sellers -->
-    <div class="tiendas-section">
-      <div class="section-title">🏆 Modelos Best Seller — Tiendas Físicas</div>
-      <div class="bestseller-grid">
-
-        <div class="bs-card rank-1">
-          <div class="bs-rank">#1</div>
-          <div class="bs-info">
-            <div class="bs-name">Novablast 5</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">7,740</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">15</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">5,048</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">65.22%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card rank-2">
-          <div class="bs-rank">#2</div>
-          <div class="bs-info">
-            <div class="bs-name">Forerunner 265 Music</div>
-            <div class="bs-brand">GARMIN</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">6,246</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">4</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">1,928</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">30.86%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card rank-3">
-          <div class="bs-rank">#3</div>
-          <div class="bs-info">
-            <div class="bs-name">Gt-1000 14</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">5,266</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">13</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">3,498</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">66.42%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#4</div>
-          <div class="bs-info">
-            <div class="bs-name">Gel-Cumulus 28</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">5,160</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">12</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,742</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">53.14%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#5</div>
-          <div class="bs-info">
-            <div class="bs-name">Superblast 3</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">4,237</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">5</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,936</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">69.29%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#6</div>
-          <div class="bs-info">
-            <div class="bs-name">Gel-Nimbus 28</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">3,932</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">6</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,681</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">68.18%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#7</div>
-          <div class="bs-info">
-            <div class="bs-name">Upcourt 6</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">3,010</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">11</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,051</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">68.14%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#8</div>
-          <div class="bs-info">
-            <div class="bs-name">Gel-Pulse 17</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">2,965</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">7</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,057</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg">69.35%</span></div>
-          </div>
-        </div>
-
-        <div class="bs-card">
-          <div class="bs-rank">#9</div>
-          <div class="bs-info">
-            <div class="bs-name">Sc Trainer V4</div>
-            <div class="bs-brand">ASICS</div>
-          </div>
-          <div class="bs-stats">
-            <div class="bs-stat"><span class="bs-stat-label">Ventas</span><span class="bs-stat-val">2,034</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Unid</span><span class="bs-stat-val">3</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">Contri</span><span class="bs-stat-val">2,034</span></div>
-            <div class="bs-stat"><span class="bs-stat-label">MG%</span><span class="bs-stat-val mg" style="color:var(--accent)">100.00%</span></div>
-          </div>
-        </div>
-
+    <div class="bs-card r2">
+      <div class="bs-rank">#2</div>
+      <div class="bs-name">Superblast 3</div>
+      <div class="bs-brand">ASICS · Nueva línea</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">1,398</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">2</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">878</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">62.77%</span></div>
       </div>
     </div>
 
-    <!-- Bottom row tiendas -->
-    <div class="bottom-row">
-      <div class="panel">
-        <div class="panel-title">Ventas por Marca</div>
-        <div class="bar-row">
-          <span class="bar-label">ASICS</span>
-          <div class="bar-track"><div class="bar-fill c1" style="width:47.5%">95,549</div></div>
-          <span class="bar-amount" style="color:var(--accent3)">47.5%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">NEW BALANCE</span>
-          <div class="bar-track"><div class="bar-fill c2" style="width:15.9%">32,096</div></div>
-          <span class="bar-amount">15.9%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">ADIDAS</span>
-          <div class="bar-track"><div class="bar-fill c3" style="width:10.0%">20,236</div></div>
-          <span class="bar-amount">10.0%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">GARMIN</span>
-          <div class="bar-track"><div class="bar-fill c4" style="width:6.6%">13,267</div></div>
-          <span class="bar-amount">6.6%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">2XU</span>
-          <div class="bar-track"><div class="bar-fill c5" style="width:5.1%">10,352</div></div>
-          <span class="bar-amount">5.1%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">OOFOS</span>
-          <div class="bar-track"><div class="bar-fill c6" style="width:2.1%">4,188</div></div>
-          <span class="bar-amount">2.1%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">361</span>
-          <div class="bar-track"><div class="bar-fill c7" style="width:2.0%">4,056</div></div>
-          <span class="bar-amount">2.0%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">SIS</span>
-          <div class="bar-track"><div class="bar-fill c8" style="width:1.7%">3,491</div></div>
-          <span class="bar-amount">1.7%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">JOMA</span>
-          <div class="bar-track"><div class="bar-fill c9" style="width:1.6%">3,149</div></div>
-          <span class="bar-amount">1.6%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">GU</span>
-          <div class="bar-track"><div class="bar-fill c10" style="width:1.3%">2,580</div></div>
-          <span class="bar-amount">1.3%</span>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Ventas por Categoría</div>
-        <div class="bar-row">
-          <span class="bar-label">Running</span>
-          <div class="bar-track"><div class="bar-fill c1" style="width:64.3%">129,436</div></div>
-          <span class="bar-amount" style="color:var(--accent3)">64.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Sin Definir</span>
-          <div class="bar-track"><div class="bar-fill c5" style="width:12.8%">25,721</div></div>
-          <span class="bar-amount">12.8%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Training</span>
-          <div class="bar-track"><div class="bar-fill c3" style="width:5.6%">11,361</div></div>
-          <span class="bar-amount">5.6%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS-Volley</span>
-          <div class="bar-track"><div class="bar-fill c2" style="width:5.3%">10,641</div></div>
-          <span class="bar-amount">5.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS-Tennis</span>
-          <div class="bar-track"><div class="bar-fill c4" style="width:4.3%">8,570</div></div>
-          <span class="bar-amount">4.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Trail Running</span>
-          <div class="bar-track"><div class="bar-fill c6" style="width:2.2%">4,392</div></div>
-          <span class="bar-amount">2.2%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS</span>
-          <div class="bar-track"><div class="bar-fill c7" style="width:1.9%">3,723</div></div>
-          <span class="bar-amount">1.9%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Slide</span>
-          <div class="bar-track"><div class="bar-fill c8" style="width:1.1%">2,286</div></div>
-          <span class="bar-amount">1.1%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Recovery</span>
-          <div class="bar-track"><div class="bar-fill c10" style="width:1.1%">2,172</div></div>
-          <span class="bar-amount">1.1%</span>
-        </div>
+    <div class="bs-card r3">
+      <div class="bs-rank">#3</div>
+      <div class="bs-name">Forerunner 165 Music</div>
+      <div class="bs-brand">GARMIN · Nueva</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">1,068</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">353</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">33.07%</span></div>
       </div>
     </div>
 
-  </div><!-- end tab tiendas -->
-
-  <!-- ===== TAB WEB ===== -->
-  <div id="tab-web" class="tab-content">
-
-    <!-- KPIs Web -->
-    <div class="kpi-strip">
-      <div class="kpi-card ventas">
-        <div class="kpi-label">Ventas Web</div>
-        <div class="kpi-value">12.78 mil</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 7.97 mil</span>
-          <span class="kpi-var pos">▲ 60.33%</span>
-        </div>
-      </div>
-      <div class="kpi-card unid">
-        <div class="kpi-label">Unidades</div>
-        <div class="kpi-value">73</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 66</span>
-          <span class="kpi-var pos">▲ 10.61%</span>
-        </div>
-      </div>
-      <div class="kpi-card contri">
-        <div class="kpi-label">Contribución</div>
-        <div class="kpi-value">7.03 mil</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 3.39 mil</span>
-          <span class="kpi-var pos">▲ 107.20%</span>
-        </div>
-      </div>
-      <div class="kpi-card mg">
-        <div class="kpi-label">Margen %</div>
-        <div class="kpi-value">55.00%</div>
-        <div class="kpi-meta">
-          <span class="kpi-ly">LY: 42.56%</span>
-          <span class="kpi-var pos" style="color:var(--accent)">▲ 12.44%</span>
-        </div>
+    <div class="bs-card">
+      <div class="bs-rank">#4</div>
+      <div class="bs-name">Vivoactive 6</div>
+      <div class="bs-brand">GARMIN · Nueva</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">1,068</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">345</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">32.32%</span></div>
       </div>
     </div>
 
-    <!-- Web summary card -->
-    <div class="web-summary">
-      <div class="section-title" style="margin-bottom:0">Canal Digital — FP Web</div>
-      <div class="web-summary-grid">
-        <div class="web-stat">
-          <div class="web-stat-label">Origen</div>
-          <div class="web-stat-value">FP</div>
-          <div class="web-stat-sub">Canal web</div>
-        </div>
-        <div class="web-stat">
-          <div class="web-stat-label">Ventas</div>
-          <div class="web-stat-value">12,782</div>
-          <div class="web-stat-sub">LY: 7,973</div>
-        </div>
-        <div class="web-stat">
-          <div class="web-stat-label">Unidades</div>
-          <div class="web-stat-value">73</div>
-          <div class="web-stat-sub">LY: 66</div>
-        </div>
-        <div class="web-stat">
-          <div class="web-stat-label">Contribución</div>
-          <div class="web-stat-value">7,030</div>
-          <div class="web-stat-sub">LY: 3,393</div>
-        </div>
-        <div class="web-stat">
-          <div class="web-stat-label">MG%</div>
-          <div class="web-stat-value">55.00%</div>
-          <div class="web-stat-sub">LY: 42.56%</div>
-        </div>
-        <div class="web-stat">
-          <div class="web-stat-label">Vr% Contri</div>
-          <div class="web-stat-value" style="color:var(--accent)">+107%</div>
-          <div class="web-stat-sub">vs año anterior</div>
-        </div>
+    <div class="bs-card">
+      <div class="bs-rank">#5</div>
+      <div class="bs-name">Novablast 5 Luxe</div>
+      <div class="bs-brand">ASICS · Nueva</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">763</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">2</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">308</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">40.33%</span></div>
       </div>
     </div>
 
-    <!-- Bottom row web -->
-    <div class="bottom-row">
-      <div class="panel">
-        <div class="panel-title">Marcas — Canal Web</div>
-        <div class="bar-row">
-          <span class="bar-label">ASICS</span>
-          <div class="bar-track"><div class="bar-fill c1" style="width:69.9%">8,940</div></div>
-          <span class="bar-amount" style="color:var(--accent3)">69.9%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">NEW BALANCE</span>
-          <div class="bar-track"><div class="bar-fill c2" style="width:17.3%">2,210</div></div>
-          <span class="bar-amount">17.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">OOFOS</span>
-          <div class="bar-track"><div class="bar-fill c3" style="width:5.2%">670</div></div>
-          <span class="bar-amount">5.2%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">ADIDAS</span>
-          <div class="bar-track"><div class="bar-fill c4" style="width:4.6%">590</div></div>
-          <span class="bar-amount">4.6%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">2XU</span>
-          <div class="bar-track"><div class="bar-fill c5" style="width:1.7%">220</div></div>
-          <span class="bar-amount">1.7%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">ENVIOS</span>
-          <div class="bar-track"><div class="bar-fill c6" style="width:0.7%">90</div></div>
-          <span class="bar-amount">0.7%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">SIS</span>
-          <div class="bar-track"><div class="bar-fill c7" style="width:0.3%">40</div></div>
-          <span class="bar-amount">0.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">KAPPA</span>
-          <div class="bar-track"><div class="bar-fill c8" style="width:0.2%">30</div></div>
-          <span class="bar-amount">0.2%</span>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Categorías — Canal Web</div>
-        <div class="bar-row">
-          <span class="bar-label">Running</span>
-          <div class="bar-track"><div class="bar-fill c1" style="width:75.4%">9,640</div></div>
-          <span class="bar-amount" style="color:var(--accent3)">75.4%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS-Tennis</span>
-          <div class="bar-track"><div class="bar-fill c4" style="width:8.7%">1,110</div></div>
-          <span class="bar-amount">8.7%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS-Volley</span>
-          <div class="bar-track"><div class="bar-fill c2" style="width:4.6%">590</div></div>
-          <span class="bar-amount">4.6%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">CPS</span>
-          <div class="bar-track"><div class="bar-fill c3" style="width:3.4%">430</div></div>
-          <span class="bar-amount">3.4%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Slide</span>
-          <div class="bar-track"><div class="bar-fill c5" style="width:3.0%">380</div></div>
-          <span class="bar-amount">3.0%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Recovery</span>
-          <div class="bar-track"><div class="bar-fill c6" style="width:2.3%">290</div></div>
-          <span class="bar-amount">2.3%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Training</span>
-          <div class="bar-track"><div class="bar-fill c7" style="width:1.7%">220</div></div>
-          <span class="bar-amount">1.7%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">(En blanco)</span>
-          <div class="bar-track"><div class="bar-fill c8" style="width:0.6%">80</div></div>
-          <span class="bar-amount">0.6%</span>
-        </div>
+    <div class="bs-card">
+      <div class="bs-rank">#6</div>
+      <div class="bs-name">Gel-Nimbus 28</div>
+      <div class="bs-brand">ASICS</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">678</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">478</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv hi">70.45%</span></div>
       </div>
     </div>
 
-  </div><!-- end tab web -->
+    <div class="bs-card">
+      <div class="bs-rank">#7</div>
+      <div class="bs-name">Gel-Nimbus 27</div>
+      <div class="bs-brand">ASICS · 0.00% vs LY</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">678</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">2</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">213</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">31.44%</span></div>
+      </div>
+    </div>
+
+    <div class="bs-card">
+      <div class="bs-rank">#8</div>
+      <div class="bs-name">Gel-Rocket 12</div>
+      <div class="bs-brand">ASICS</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">656</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">2</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">456</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv hi">69.47%</span></div>
+      </div>
+    </div>
+
+    <div class="bs-card">
+      <div class="bs-rank">#9</div>
+      <div class="bs-name">Sky Elite FF 3</div>
+      <div class="bs-brand">ASICS</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">627</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">419</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv hi">66.83%</span></div>
+      </div>
+    </div>
+
+    <div class="bs-card">
+      <div class="bs-rank">#10</div>
+      <div class="bs-name">1080 V15 London</div>
+      <div class="bs-brand">NEW BALANCE</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">593</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">243</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">41.00%</span></div>
+      </div>
+    </div>
+
+    <div class="bs-card">
+      <div class="bs-rank">#11</div>
+      <div class="bs-name">Adizero Boston 13 M</div>
+      <div class="bs-brand">ADIDAS</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">558</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">323</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv mg">57.89%</span></div>
+      </div>
+    </div>
+
+    <div class="bs-card">
+      <div class="bs-rank">#12</div>
+      <div class="bs-name">Netburner Ballistic FF</div>
+      <div class="bs-brand">ASICS</div>
+      <div class="bs-stats">
+        <div class="bs-stat"><span class="bs-sl">Ventas</span><span class="bs-sv">551</span></div>
+        <div class="bs-stat"><span class="bs-sl">Unid</span><span class="bs-sv">1</span></div>
+        <div class="bs-stat"><span class="bs-sl">Contri</span><span class="bs-sv">370</span></div>
+        <div class="bs-stat"><span class="bs-sl">MG%</span><span class="bs-sv hi">67.22%</span></div>
+      </div>
+    </div>
+
+  </div>
 
 </main>
 
 <footer>
-  FITPOINT · REPORTE DE VENTAS · 16/03/2026 – 22/03/2026 · DATOS INTERNOS
+  FITPOINT · ANÁLISIS CYBER LUNES · 23/03/2026 · DATOS INTERNOS
 </footer>
-
-<script>
-  function showTab(tab, btn) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    btn.classList.add('active');
-  }
-</script>
 
 </body>
 </html>
