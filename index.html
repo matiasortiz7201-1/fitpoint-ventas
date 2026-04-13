@@ -175,6 +175,25 @@
   .web-stat-value{font-family:var(--font-display);font-size:1.4rem;letter-spacing:2px;color:var(--accent);}
   .web-stat-sub{font-size:.62rem;color:var(--muted);font-family:var(--font-mono);margin-top:.15rem;}
 
+  /* INSIGHTS */
+  .insights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem;margin-bottom:2rem;animation:fadeUp .4s ease both;}
+  .insight-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;
+    display:flex;gap:.75rem;align-items:flex-start;transition:transform .2s;}
+  .insight-card:hover{transform:translateY(-2px);}
+  .insight-card.good{border-left:3px solid var(--accent);}
+  .insight-card.warn{border-left:3px solid var(--accent2);}
+  .insight-card.bad{border-left:3px solid var(--red);}
+  .insight-card.info{border-left:3px solid var(--accent3);}
+  .insight-icon{font-size:1.3rem;flex-shrink:0;line-height:1.2;}
+  .insight-body{}
+  .insight-title{font-family:var(--font-display);font-size:.85rem;letter-spacing:2px;margin-bottom:.3rem;}
+  .insight-card.good .insight-title{color:var(--accent);}
+  .insight-card.warn .insight-title{color:var(--accent2);}
+  .insight-card.bad .insight-title{color:var(--red);}
+  .insight-card.info .insight-title{color:var(--accent3);}
+  .insight-text{font-size:.76rem;color:var(--muted);line-height:1.55;}
+  .insight-text strong{color:var(--text);}
+
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
   footer{text-align:center;padding:1.5rem;font-family:var(--font-mono);font-size:.62rem;
     color:var(--muted);letter-spacing:2px;border-top:1px solid var(--border);margin-top:1rem;}
@@ -237,6 +256,75 @@
         <div class="kpi-ly">LY: 53.21%</div>
         <div class="kpi-var neg">▼ 0.62%</div>
       </div>
+    </div>
+
+    <!-- INSIGHTS TIENDAS -->
+    <div class="insights-grid">
+
+      <div class="insight-card good">
+        <div class="insight-icon">📈</div>
+        <div class="insight-body">
+          <div class="insight-title">CRECIMIENTO SÓLIDO SIN SACRIFICAR MARGEN</div>
+          <div class="insight-text">Las ventas crecieron <strong>+64.91% vs LY</strong> y las unidades <strong>+78.58%</strong>, lo que indica que estamos vendiendo más cantidad a precios saludables. Lo más relevante es que el margen solo cedió <strong>▼0.62%</strong>, prácticamente plano. Esto demuestra que el crecimiento no se logró a base de descuentos sino de mayor volumen y mejora en el mix — categorías como CPS-Volley (<strong>74.60% MG</strong>) y Trail Running (<strong>67.53%</strong>) están compensando la presión de ASICS.</div>
+        </div>
+      </div>
+
+      <div class="insight-card good">
+        <div class="insight-icon">🏪</div>
+        <div class="insight-body">
+          <div class="insight-title">ASIA: LA TRANSFORMACIÓN MÁS NOTABLE DE LA SEMANA</div>
+          <div class="insight-text">Asia pasó de S/ 9,570 a <strong>S/ 29,695 (+210.28%)</strong>, triplicando su resultado con 245 unidades vs solo 62 del año anterior. Este salto no es casual — sugiere una mejora importante en surtido o una campaña local que activó la demanda. Vale la pena identificar qué mix de productos impulsó este resultado y ver qué lecciones se pueden trasladar a tiendas con performance más plano como Primavera o La Molina.</div>
+        </div>
+      </div>
+
+      <div class="insight-card good">
+        <div class="insight-icon">⌚</div>
+        <div class="insight-body">
+          <div class="insight-title">GARMIN Y GELES: EL NUEVO MOTOR DE TRÁFICO</div>
+          <div class="insight-text">La categoría "Sin Definir" — que agrupa Geles SIS y relojes Garmin — creció <strong>+376% en ventas</strong> y <strong>+104% en unidades</strong>. Garmin sola creció <strong>+1,174% vs LY</strong>. Esto indica que el cliente ya no viene solo por calzado: busca un ecosistema de running completo. Hay que monitorear que el MG% de esta categoría es <strong>29.99%</strong>, la más baja del mix, por lo que su crecimiento diluye ligeramente la rentabilidad total cuando gana tanta participación.</div>
+        </div>
+      </div>
+
+      <div class="insight-card good">
+        <div class="insight-icon">💎</div>
+        <div class="insight-body">
+          <div class="insight-title">JOMA, WILSON Y SALOMON: PEQUEÑAS PERO MUY RENTABLES</div>
+          <div class="insight-text">Joma lidera el margen con <strong>83.30%</strong>, Wilson con <strong>81.97%</strong> y Salomon con <strong>77.44%</strong> — las tres son incorporaciones nuevas sin comparativa LY. Aunque su participación en ventas aún es baja (menos del 5% combinadas), su rentabilidad es excepcional. Crecer su peso en el mix de forma estratégica, sin canibalizar el volumen de ASICS, sería una palanca directa para recuperar el margen total que hoy está presionado por las marcas más grandes.</div>
+        </div>
+      </div>
+
+      <div class="insight-card warn">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-body">
+          <div class="insight-title">ASICS CONCENTRA EL 50% DE VENTAS PERO PIERDE MARGEN</div>
+          <div class="insight-text">ASICS representa <strong>50.6% de las ventas totales</strong>, lo que hace al negocio altamente dependiente de una sola marca. Además su MG% bajó <strong>▼3.47% vs LY</strong> (de 61.50% a 58.03%). Con tanto peso en el mix, esta caída es la principal razón del ▼0.62% total consolidado. Hay que analizar si el deterioro viene de descuentos aplicados, cambio hacia modelos de menor margen, o condiciones comerciales que se ajustaron este año.</div>
+        </div>
+      </div>
+
+      <div class="insight-card warn">
+        <div class="insight-icon">📍</div>
+        <div class="insight-body">
+          <div class="insight-title">PRIMAVERA Y LA MOLINA NECESITAN REVISIÓN DE MIX</div>
+          <div class="insight-text">Primavera cayó <strong>▼4.34%</strong> en ventas y su margen está en <strong>44.50%</strong>, casi 8 puntos por debajo del promedio total. La Molina cayó <strong>▼18.81%</strong> con el MG más bajo de las tiendas comparables (<strong>50.33%</strong>). Ambas están en plazas donde probablemente el mix no está alineado con el perfil del cliente local — productos de alto margen como CPS-Volley o Trail Running podrían tener mayor penetración allí si se les da visibilidad en piso.</div>
+        </div>
+      </div>
+
+      <div class="insight-card warn">
+        <div class="insight-icon">🆕</div>
+        <div class="insight-body">
+          <div class="insight-title">PIURA Y PLAZA NORTE: BUEN ARRANQUE, MARGEN POR DESARROLLAR</div>
+          <div class="insight-text">Sin comparativa LY, ambas aportan cerca de <strong>S/ 40,664 combinadas</strong>, lo cual es un aporte real al total. Sin embargo sus MG% de <strong>48.07%</strong> y <strong>47.66%</strong> están por debajo del promedio de <strong>52.59%</strong>. Esto es esperable en tiendas nuevas que aún construyen su mix, pero hay que trabajar activamente desde el inicio en incorporar categorías de mayor margen antes de que el patrón de compra se consolide con productos de menor rentabilidad.</div>
+        </div>
+      </div>
+
+      <div class="insight-card bad">
+        <div class="insight-icon">🔴</div>
+        <div class="insight-body">
+          <div class="insight-title">SPORTSTYLE, FÚTBOL Y URBANO EN DECLIVE PRONUNCIADO</div>
+          <div class="insight-text">Sportstyle cayó <strong>▼79.05%</strong>, Fútbol <strong>▼60.71%</strong> y Urbano desapareció por completo (<strong>▼100%</strong>). En conjunto estas tres categorías perdieron cerca de <strong>S/ 3,900 vs LY</strong>. La pregunta clave es si es una decisión comercial deliberada de descontinuarlas o si hay falta de stock y reposición. Si es lo primero, el espacio y presupuesto liberado debería estar redirigiendo hacia las categorías de mayor margen. Si es lo segundo, hay una oportunidad no capturada que se está dejando ir.</div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Tiendas Cards -->
@@ -738,6 +826,53 @@
         <div class="kpi-ly">LY: 25.15%</div>
         <div class="kpi-var pos">▲ 21.15%</div>
       </div>
+    </div>
+
+    </div>
+
+    <!-- INSIGHTS WEB -->
+    <div class="insights-grid">
+
+      <div class="insight-card bad">
+        <div class="insight-icon">📉</div>
+        <div class="insight-body">
+          <div class="insight-title">CAÍDA FUERTE EN VOLUMEN — ¿QUÉ PASÓ EN WEB?</div>
+          <div class="insight-text">Las ventas web cayeron de <strong>S/ 63,250 a S/ 13,734 (▼78.29%)</strong> y las unidades de 402 a 62 (<strong>▼84.58%</strong>). Esta es la caída más significativa del reporte y merece una explicación operativa: ¿hubo un problema técnico en la plataforma?, ¿se redujo la inversión en pauta digital?, ¿o el canal web simplemente no tuvo la campaña activa que tuvo el año pasado en este mismo período? Identificar la causa es prioritario antes de asumir que es una tendencia.</div>
+        </div>
+      </div>
+
+      <div class="insight-card good">
+        <div class="insight-icon">💎</div>
+        <div class="insight-body">
+          <div class="insight-title">MENOS VOLUMEN, MEJOR CALIDAD DE VENTA</div>
+          <div class="insight-text">A pesar del desplome en volumen, el MG% web subió de <strong>25.15% a 46.30% (+21.15%)</strong>. Esto sugiere que las ventas que sí se concretaron fueron de productos de mayor valor y rentabilidad — el ticket promedio pasó de <strong>S/ 157 a S/ 221 por unidad</strong>. Si bien no compensa la caída, indica que cuando el canal web vende bien, vende mejor que antes. El reto es recuperar el volumen sin destruir esa mejora de calidad.</div>
+        </div>
+      </div>
+
+      <div class="insight-card warn">
+        <div class="insight-icon">👕</div>
+        <div class="insight-body">
+          <div class="insight-title">ROPA GANA PARTICIPACIÓN EN WEB — PERO CON UN PRODUCTO EN ROJO</div>
+          <div class="insight-text">La categoría Ropa representa <strong>22.74% del mix web</strong>, un peso relevante para un canal que históricamente es de calzado. Sin embargo, el producto <strong>Base Layer Compression Shorts</strong> aparece con <strong>MG negativo de -13.88%</strong> — se está vendiendo por debajo de su costo. Esto necesita corrección inmediata, ya sea ajustando el precio en la plataforma o retirando el producto del canal digital.</div>
+        </div>
+      </div>
+
+      <div class="insight-card info">
+        <div class="insight-icon">🔍</div>
+        <div class="insight-body">
+          <div class="insight-title">GARMIN ENTRA AL WEB CON MARGEN BAJO</div>
+          <div class="insight-text">El Vivoactive 6 es el <strong>#3 best seller web</strong> con S/ 1,068, y Garmin ya representa <strong>7.8% del mix digital</strong>. Sin embargo su MG es de solo <strong>27.05%</strong> — la más baja de todas las marcas del canal. En web, donde el costo de adquisición del cliente es más alto, vender productos de bajo margen es más costoso que en tienda. Hay que evaluar si Garmin en web es rentable o si simplemente genera tráfico que no se convierte en contribución real.</div>
+        </div>
+      </div>
+
+      <div class="insight-card info">
+        <div class="insight-icon">📊</div>
+        <div class="insight-body">
+          <div class="insight-title">OOFOS Y ASICS SOSTIENEN LA RENTABILIDAD WEB</div>
+          <div class="insight-text">OOFOS lidera el MG web con <strong>62.69%</strong> y ASICS con <strong>54.01%</strong>, siendo las dos marcas que anclan la rentabilidad del canal. Juntas representan cerca del <strong>58% del mix web</strong>. Fabletics también debuta con un MG saludable de <strong>48.21%</strong>. Si el objetivo es recuperar el volumen web sin perder calidad de margen, estas tres marcas deberían ser el foco de cualquier campaña o inversión en pauta digital.</div>
+        </div>
+      </div>
+
     </div>
 
     <div class="web-hero">
